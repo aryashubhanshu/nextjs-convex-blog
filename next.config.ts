@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         port: '',
       },
+      {
+        hostname: 'notable-minnow-393.convex.cloud',
+        protocol: 'https',
+        port: '',
+      },
     ],
   },
 };

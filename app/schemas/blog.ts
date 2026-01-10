@@ -1,6 +1,7 @@
-import z from "zod";
+import z from 'zod';
 
 export const postSchema = z.object({
-    title: z.string().min(3).max(40),
-    content: z.string().min(10),
-})
+  title: z.string().min(3).max(40),
+  content: z.string().min(10),
+  image: z.instanceof(File),
+});

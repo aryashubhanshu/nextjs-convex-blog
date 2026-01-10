@@ -18,11 +18,9 @@ import z from 'zod';
 import { useTransition } from 'react';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 import { createBlogAction } from '@/app/actions';
 
 export default function CreatePage() {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm({
@@ -30,6 +28,7 @@ export default function CreatePage() {
     defaultValues: {
       title: '',
       content: '',
+      image: undefined,
     },
   });
 
@@ -38,7 +37,6 @@ export default function CreatePage() {
       await createBlogAction(data);
 
       toast.success('Post created successfully');
-      router.push('/');
     });
   };
 
@@ -77,6 +75,24 @@ export default function CreatePage() {
                   <Field>
                     <FieldLabel>Content</FieldLabel>
                     <Textarea aria-invalid={fieldState.invalid} {...field} />
+                  </Field>
+                )}
+              />
+              <Controller
+                name="image"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel>Image</FieldLabel>
+                    <Input
+                      type="file"
+                      aria-invalid={fieldState.invalid}
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        field.onChange(file);
+                      }}
+                    />
                   </Field>
                 )}
               />
