@@ -8,6 +8,8 @@ import { api } from '@/convex/_generated/api';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
+export const dynamic = 'force-dynamic';
+
 export default function BlogPage() {
   return (
     <div className="py-12">
