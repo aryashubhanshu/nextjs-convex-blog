@@ -7,8 +7,16 @@ import { fetchQuery } from 'convex/nextjs';
 import { api } from '@/convex/_generated/api';
 import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Blog | BlogPro',
+  description: 'Read our latest blog posts and articles',
+  category: 'Blog',
+  authors: [{ name: 'BlogPro' }],
+};
 
 export default function BlogPage() {
   return (

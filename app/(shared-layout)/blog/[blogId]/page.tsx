@@ -6,11 +6,32 @@ import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { fetchQuery, preloadQuery } from 'convex/nextjs';
 import { ArrowLeft } from 'lucide-react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
 interface BlogPostPageProps {
   params: Promise<{ blogId: Id<'posts'> }>;
+}
+
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { blogId } = await params;
+
+  const post = await fetchQuery(api.posts.getPostById, { postId: blogId });
+
+  if (!post) {
+    return {
+      title: 'Post not found',
+      description: 'Post not found',
+    };
+  }
+
+  return {
+    title: post.title,
+    description: post.content,
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
