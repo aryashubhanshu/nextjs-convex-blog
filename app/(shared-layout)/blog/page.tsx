@@ -9,7 +9,8 @@ import { Suspense } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
+export const revalidate = 30;
 
 export const metadata: Metadata = {
   title: 'Blog | BlogPro',

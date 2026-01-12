@@ -11,6 +11,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface BlogPostPageProps {
   params: Promise<{ blogId: Id<'posts'> }>;
@@ -56,6 +57,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </div>
     );
   }
+
+  if (!userId) return redirect('/auth/login');
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 animate-in fade-in duration-500 relative">
