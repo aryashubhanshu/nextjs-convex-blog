@@ -1,8 +1,10 @@
 import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CommentSection } from '@/components/web/CommentSection';
+import { PostPresence } from '@/components/web/PostPresence';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
+import { getToken } from '@/lib/auth-server';
 import { cn } from '@/lib/utils';
 import { fetchQuery, preloadQuery } from 'convex/nextjs';
 import { ArrowLeft } from 'lucide-react';
@@ -37,9 +39,12 @@ export async function generateMetadata({
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { blogId } = await params;
 
-  const [post, preloadedComments] = await Promise.all([
+  const token = await getToken();
+
+  const [post, preloadedComments, userId] = await Promise.all([
     await fetchQuery(api.posts.getPostById, { postId: blogId }),
     await preloadQuery(api.comments.getCommentsByPostId, { postId: blogId }),
+    await fetchQuery(api.presence.getUserId, {}, { token }),
   ]);
 
   if (!post) {
@@ -74,24 +79,25 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       </div>
 
       <div className="space-y-4 flex flex-col">
-        <div className="flex items-baseline justify-between">
+        <div className="flex items-center justify-between">
           <h1 className="text-4xl font-bold tracking-tight text-foreground">
             {post.title}
           </h1>
 
-          <p className="text-sm text-muted-foreground">
-            Posted on:{' '}
-            {new Date(post._creationTime).toLocaleDateString('en-US')}
-          </p>
+          <div>
+            {userId && <PostPresence roomId={post._id} userId={userId} />}
+          </div>
         </div>
 
-        <Separator className="my-4" />
+        <p className="text-sm text-muted-foreground">
+          Posted on: {new Date(post._creationTime).toLocaleDateString('en-US')}
+        </p>
+
+        <Separator className="my-2" />
 
         <p className="text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap">
           {post.content}
         </p>
-
-        <Separator className="my-4" />
 
         <CommentSection preloadedComments={preloadedComments} />
       </div>
