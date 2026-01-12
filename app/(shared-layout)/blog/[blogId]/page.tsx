@@ -4,7 +4,7 @@ import { CommentSection } from '@/components/web/CommentSection';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
-import { fetchQuery } from 'convex/nextjs';
+import { fetchQuery, preloadQuery } from 'convex/nextjs';
 import { ArrowLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,7 +16,10 @@ interface BlogPostPageProps {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { blogId } = await params;
 
-  const post = await fetchQuery(api.posts.getPostById, { postId: blogId });
+  const [post, preloadedComments] = await Promise.all([
+    await fetchQuery(api.posts.getPostById, { postId: blogId }),
+    await preloadQuery(api.comments.getCommentsByPostId, { postId: blogId }),
+  ]);
 
   if (!post) {
     return (
@@ -69,7 +72,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         <Separator className="my-4" />
 
-        <CommentSection />
+        <CommentSection preloadedComments={preloadedComments} />
       </div>
     </div>
   );
