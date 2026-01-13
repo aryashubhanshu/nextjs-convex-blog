@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
         port: '',
       },
       {
-        hostname: 'notable-minnow-393.convex.cloud',
+        hostname: 'brainy-cardinal-945.convex.cloud',
         protocol: 'https',
         port: '',
       },
